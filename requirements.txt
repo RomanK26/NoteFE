@@ -1,0 +1,6 @@
+asgiref==3.8.1
+certifi==2025.4.26
+cffi==1.17.1
+pillow==11.2.1
+pycparser==2.22
+sqlparse==0.5.3
