@@ -86,7 +86,7 @@ const Register = () => {
             Submit
           </button>
         </form>
-        <Link className="block self-center justify-self-center text-gray-400">
+        <Link className="block self-center justify-self-center text-gray-400" to={'/login'}> 
           Already have an account?{" "}
           <span className="text-orange-300 underline">Login</span>
         </Link>
