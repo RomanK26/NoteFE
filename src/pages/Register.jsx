@@ -11,7 +11,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log(username, password);
+    // console.log(username, password);
     const res = await api.post("/api/register/", { username, password });
     if (res.status === 200) {
       console.log(res.data)

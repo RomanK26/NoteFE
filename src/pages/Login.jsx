@@ -11,7 +11,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log(username, password);
+    // console.log(username, password);
     try {
       const res = await api.post("/api/token/", { username, password });
       if (res.status === 200) {
