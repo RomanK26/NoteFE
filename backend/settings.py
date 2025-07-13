@@ -25,8 +25,8 @@ SECRET_KEY = "django-insecure-rrh*b@6_5*-(c$#18qm$)3^1d=ffunupu&%3b5m)2smtew(gxd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://noteapp.romankasichhwa.com.np",
-                 "https://notefe.onrender.com",]
+ALLOWED_HOSTS = ["noteapp.romankasichhwa.com.np",
+                 "notefe.onrender.com","notebe-slde.onrender.com"]
 
 
 CORS_ALLOWED_ORIGINS = [
