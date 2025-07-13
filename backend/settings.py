@@ -23,14 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-rrh*b@6_5*-(c$#18qm$)3^1d=ffunupu&%3b5m)2smtew(gxd"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["https://noteapp.romankasichhwa.com.np",
+                 "https://notefe.onrender.com",]
 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://noteapp.romankasichhwa.com.np",
+    "https://notefe.onrender.com",
 ]
 
 
@@ -70,7 +73,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-  
+
 ]
 
 ROOT_URLCONF = "backend.urls"
