@@ -1,10 +1,15 @@
 from logging import raiseExceptions
-from django.shortcuts import render
+
 from django.contrib.auth.models import User
-from rest_framework.generics import CreateAPIView,ListCreateAPIView,RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import AllowAny,IsAuthenticated
-from .models import Note
+from django.shortcuts import render
+from rest_framework.generics import (CreateAPIView, ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView)
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
 from api.serializers import NoteSerializer, UserSerializer
+
+from .models import Note
+
 # Create your views here.
 
 

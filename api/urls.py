@@ -1,6 +1,7 @@
 from django.urls import path
 
-from api.views import NoteListCreateView, NoteUpdateDetailDeleteView, RegistrationView
+from api.views import (NoteListCreateView, NoteUpdateDetailDeleteView,
+                       RegistrationView)
 
 urlpatterns = [
     path("register/",RegistrationView.as_view(), name = 'register'),
