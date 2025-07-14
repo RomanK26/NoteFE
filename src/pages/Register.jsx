@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../api";
 import { Link, useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -11,14 +12,32 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // console.log(username, password);
-    const res = await api.post("/api/register/", { username, password });
-    if (res.status === 200) {
-      console.log(res.data);
-      navigate("/login");
-
-      // localStorage.setItem("accessToken", res.data.access);
-      // localStorage.setItem("refreshToken", res.data.refresh);
+    try {
+      const res = await api.post("/api/register/", { username, password });
+      console.log(res);
+      if (res.status === 201) {
+        toast("User registered successfully", {
+          position: "bottom-right",
+          duration: 2500,
+          style: {
+            color: "#006400",
+          },
+        });
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.status === 400) {
+        toast("User with username already exists", {
+          duration: 2500,
+          position: "center",
+          style: {
+            height: "2rem",
+            color: "#ef476f",
+            padding: "1rem",
+          },
+        });
+      }
     }
   };
   return (
@@ -86,7 +105,10 @@ const Register = () => {
             Submit
           </button>
         </form>
-        <Link className="block self-center justify-self-center text-gray-400" to={'/login'}> 
+        <Link
+          className="block self-center justify-self-center text-gray-400"
+          to={"/login"}
+        >
           Already have an account?{" "}
           <span className="text-orange-300 underline">Login</span>
         </Link>

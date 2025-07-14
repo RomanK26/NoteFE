@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../api";
 import { Link, useNavigate } from "react-router";
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -19,6 +20,13 @@ const Login = () => {
         localStorage.clear();
         localStorage.setItem("accessToken", res.data.access);
         localStorage.setItem("refreshToken", res.data.refresh);
+        toast("User logged in successfully!",{
+          position:"bottom-right",
+          duration:2500,
+          style:{
+            color:"#006400"
+          }
+        })
         navigate("/");
       }
     } catch (error) {
