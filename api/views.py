@@ -5,7 +5,7 @@ from django.shortcuts import render
 from rest_framework.generics import (CreateAPIView, ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView)
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
+from rest_framework import filters
 from api.serializers import NoteSerializer, UserSerializer
 
 from .models import Note
@@ -22,6 +22,8 @@ class RegistrationView(CreateAPIView):
 class NoteListCreateView(ListCreateAPIView):
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated,]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'content']
     
     def get_queryset(self):
         user = self.request.user
