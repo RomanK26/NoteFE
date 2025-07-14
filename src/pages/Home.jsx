@@ -10,16 +10,24 @@ const Home = () => {
   const [mode, setMode] = useState("create");
   const [data, setData] = useState({});
   const [author, setAuthor] = useState("");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     getNotes();
-  }, [modal]);
+  }, [modal, search]);
 
   const getNotes = async () => {
-    const res = await api.get("/api/notes/");
-    console.log(res);
-    setNotes(res.data);
-    setAuthor(res.data[0].author);
+    try {
+      
+      const res = await api.get("/api/notes/",{
+        params:{search}
+      });
+      // console.log(res);
+      setNotes(res.data);
+      setAuthor(res.data[0].author);
+    } catch (error) {
+      toast("Failed to fetch notes")
+    }
   };
 
   const handleCreate = (mode, id = null) => {
@@ -34,7 +42,7 @@ const Home = () => {
 
   return (
     <div className="w-full min-w-[230px]">
-      <Navbar author={author} />
+      <Navbar author={author} setSearch={setSearch}/>
 
       <div className="grid grid-cols-1 gap-4 p-8 lg:grid-cols-4">
         {notes.map((note) => (
@@ -83,7 +91,9 @@ const Home = () => {
         </span>
       </div>
 
-      {modal && <CreateModal onClose={() => setModal(false)} mode={mode} data={data}/>}
+      {modal && (
+        <CreateModal onClose={() => setModal(false)} mode={mode} data={data} />
+      )}
     </div>
   );
 };

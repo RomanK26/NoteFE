@@ -16,9 +16,6 @@ const CreateModal = ({ onClose, mode, data }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Title:", title);
-    console.log("Content:", content);
-
     try {
       let res;
 

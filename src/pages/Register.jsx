@@ -14,7 +14,7 @@ const Register = () => {
     setIsLoading(true);
     try {
       const res = await api.post("/api/register/", { username, password });
-      console.log(res);
+
       if (res.status === 201) {
         toast("User registered successfully", {
           position: "bottom-right",
@@ -26,7 +26,6 @@ const Register = () => {
         navigate("/login");
       }
     } catch (error) {
-      console.log(error);
       if (error.status === 400) {
         toast("User with username already exists", {
           duration: 2500,
