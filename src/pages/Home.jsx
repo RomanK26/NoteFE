@@ -3,6 +3,7 @@ import api from "../api";
 import { SquarePen, SquarePlus, Trash2, Trash2Icon } from "lucide-react";
 import CreateModal from "../components/CreateModal";
 import Navbar from "../components/Navbar";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
@@ -18,15 +19,14 @@ const Home = () => {
 
   const getNotes = async () => {
     try {
-      
-      const res = await api.get("/api/notes/",{
-        params:{search}
+      const res = await api.get("/api/notes/", {
+        params: { search },
       });
       // console.log(res);
       setNotes(res.data);
       setAuthor(res.data[0].author);
     } catch (error) {
-      toast("Failed to fetch notes")
+      toast("Failed to fetch notes");
     }
   };
 
@@ -42,7 +42,7 @@ const Home = () => {
 
   return (
     <div className="w-full min-w-[230px]">
-      <Navbar author={author} setSearch={setSearch}/>
+      <Navbar author={author} setSearch={setSearch} />
 
       <div className="grid grid-cols-1 gap-4 p-8 lg:grid-cols-4">
         {notes.map((note) => (
@@ -82,7 +82,7 @@ const Home = () => {
       </div>
 
       <div
-        className="absolute right-10 bottom-10 rounded-3xl border bg-amber-300 p-1 hover:cursor-pointer"
+        className="fixed right-10 bottom-10 rounded-3xl border bg-amber-300 p-1 hover:cursor-pointer"
         onClick={() => handleCreate("delete")}
       >
         <span className="flex">

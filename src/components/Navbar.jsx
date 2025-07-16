@@ -16,7 +16,7 @@ const Navbar = ({ author ,setSearch}) => {
           name=""
           id=""
           placeholder="search"
-          className="hidden flex-1 rounded-md border px-2 sm:hidden lg:block lg:w-1/2"
+          className="hidden bg-gray-100 flex-1 rounded-md border px-2 sm:hidden lg:block lg:w-1/2"
           onChange={(e)=>setSearch(e.target.value)}
         />
         <div className="flex items-center gap-2">
