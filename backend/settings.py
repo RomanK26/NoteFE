@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-rrh*b@6_5*-(c$#18qm$)3^1d=ffunupu&%3b5m)2smtew(gxd
 DEBUG = False
 
 ALLOWED_HOSTS = ["noteapp.romankasichhwa.com.np",
-                 "notefe.onrender.com","notebe-slde.onrender.com","localhost"]
+                 "notefe.onrender.com", "notebe-slde.onrender.com", "localhost"]
 
 
 CORS_ALLOWED_ORIGINS = [
@@ -57,6 +57,9 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -148,3 +151,14 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
