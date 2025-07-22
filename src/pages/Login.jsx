@@ -1,14 +1,14 @@
-
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setPassword, setUsername,login } from "../slices/authSlice";
+import { setPassword, setUsername, login } from "../slices/authSlice";
+import { setAuthor } from "../slices/NoteSlices";
 // import {login } from "../slices/authSlice"
 
 const Login = () => {
   const username = useSelector((state) => state.auth.username);
   const password = useSelector((state) => state.auth.password);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,7 +17,8 @@ const Login = () => {
 
     if (login.fulfilled.match(result)) {
       toast.success("Logged in!");
-      navigate("/");
+      dispatch(setAuthor(username));
+      navigate("/",{replace:true});
     } else {
       toast.error(result.payload || "Login failed");
     }
@@ -38,7 +39,7 @@ const Login = () => {
               Username
             </label>
             <input
-              type="test"
+              type="text"
               id="username"
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               placeholder="John Doe"

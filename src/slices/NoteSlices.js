@@ -4,13 +4,19 @@ import api from "../api";
 export const fetchNotes = createAsyncThunk(
   "notes/fetchNotes",
   async (search = "") => {
-    const res = await api.get("/api/notes/", { params: { search } });
+    if (search) {
+      const res = await api.get("/api/notes/", { params: { search } });
+      return res.data;
+    }
+    const res = await api.get("/api/notes/");
     return res.data;
   },
 );
 
 export const removeNote = createAsyncThunk("notes/removeNote", async (id) => {
-  await api.delete(`/api/notes/${id}/`);
+  const res = await api.delete(`/api/notes/${id}/`);
+  // console.log("Delete response:", res);
+  // console.log("deleted id", id);
   return id;
 });
 
@@ -20,6 +26,8 @@ const initialState = {
   mode: "create",
   data: {},
   search: "",
+  title: "",
+  content: "",
   status: "idle",
   loading: false,
 };
@@ -43,6 +51,27 @@ export const noteSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setAuthor: (state, action) => {
+      state.author = action.payload;
+    },
+    addNote: (state, action) => {
+      const { mode, id } = action.payload;
+      state.mode = mode;
+      state.modal = true;
+      if (mode === "update" && id !== null) {
+        const foundNote = state.notes.find((note) => note.id === id);
+        state.data = foundNote || {};
+      } else {
+        state.data = {};
+      }
+    },
+
+    setTitle: (state, action) => {
+      state.title = action.payload;
+    },
+    setContent: (state, action) => {
+      state.content = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -62,6 +91,15 @@ export const noteSlice = createSlice({
   },
 });
 
-export const { setModal, setMode, setData, setSearch } = noteSlice.actions;
+export const {
+  setModal,
+  setMode,
+  setData,
+  setSearch,
+  setAuthor,
+  addNote,
+  setTitle,
+  setContent,
+} = noteSlice.actions;
 
 export default noteSlice.reducer;

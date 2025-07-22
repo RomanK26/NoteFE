@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import api from "../api";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { setContent, setTitle } from "../slices/NoteSlices";
 
 const CreateModal = ({ onClose, mode, data }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const title = useSelector((state) => state.notes.title);
+  const content = useSelector((state) => state.notes.content);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (mode === "update") {
-      setTitle(data.title);
-      setContent(data.content);
+      dispatch(setTitle(data.title));
+      dispatch(setContent(data.content));
     }
   }, [data, mode]);
 
@@ -73,7 +76,7 @@ const CreateModal = ({ onClose, mode, data }) => {
                 type="text"
                 className="w-full rounded-lg border bg-gray-50 p-2 text-sm"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => dispatch(setTitle(e.target.value))}
                 required
                 placeholder="Enter title"
               />
@@ -86,7 +89,7 @@ const CreateModal = ({ onClose, mode, data }) => {
                 rows="4"
                 className="w-full rounded-lg border bg-gray-50 p-2 text-sm"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e) => dispatch(setContent(e.target.value))}
                 required
                 placeholder="Write content here..."
               />

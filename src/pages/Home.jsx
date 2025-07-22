@@ -4,40 +4,41 @@ import { SquarePen, SquarePlus, Trash2, Trash2Icon } from "lucide-react";
 import CreateModal from "../components/CreateModal";
 import Navbar from "../components/Navbar";
 import toast from "react-hot-toast";
+import {
+  addNote,
+  fetchNotes,
+  removeNote,
+  setModal,
+  setSearch,
+} from "../slices/NoteSlices";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
 const Home = () => {
-  const [notes, setNotes] = useState([]);
-  const [modal, setModal] = useState(false);
-  const [mode, setMode] = useState("create");
-  const [data, setData] = useState({});
-  const [author, setAuthor] = useState("");
-  const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
+  const notes = useSelector((state) => state.notes.notes);
+  const modal = useSelector((state) => state.notes.modal);
+  const search = useSelector((state) => state.notes.search);
+  const author = localStorage.getItem("username");
+  const mode = useSelector((state) => state.notes.mode);
+  const data = useSelector((state) => state.notes.data);
+  const navigate = useNavigate();
+  console.log("username->", author);
+  console.log("notes", notes);
 
+  // console.log('mode',mode)
+  // console.log('modal',modal)
   useEffect(() => {
-    getNotes();
+    dispatch(fetchNotes());
   }, [modal, search]);
 
-  const getNotes = async () => {
-    try {
-      const res = await api.get("/api/notes/", {
-        params: { search },
-      });
-      // console.log(res);
-      setNotes(res.data);
-      setAuthor(res.data[0].author);
-    } catch (error) {
-      toast("Failed to fetch notes");
-    }
-  };
-
   const handleCreate = (mode, id = null) => {
-    setModal(true);
-    setMode(mode);
-    setData(notes.find((note) => note.id === id));
+    console.log("created ");
+    dispatch(addNote({ mode, id }));
   };
   const handleDelete = async (id) => {
-    const res = await api.delete(`/api/notes/${id}/`);
-    setNotes((prev) => prev.filter((note) => note.id !== id));
+    console.log("deleted");
+    dispatch(removeNote(id));
   };
 
   return (
@@ -83,7 +84,7 @@ const Home = () => {
 
       <div
         className="fixed right-10 bottom-10 rounded-3xl border bg-amber-300 p-1 hover:cursor-pointer"
-        onClick={() => handleCreate("delete")}
+        onClick={() => handleCreate("create")}
       >
         <span className="flex">
           <SquarePlus />
@@ -92,7 +93,11 @@ const Home = () => {
       </div>
 
       {modal && (
-        <CreateModal onClose={() => setModal(false)} mode={mode} data={data} />
+        <CreateModal
+          onClose={() => dispatch(setModal(false))}
+          mode={mode}
+          data={data}
+        />
       )}
     </div>
   );

@@ -1,14 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
 
-export const login = createAsyncThunk("auth/login", async ({ username, password }) => {
-  try {
-    const res = await api.post("/api/token/", { username, password });
-    return res.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data || "Login failed");
-  }
-});
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ username, password }, thunkAPI) => {
+    try {
+      const res = await api.post("/api/token/", { username, password });
+      console.log(res.status)
+      if (res.status == 200) {
+        console.log('inside')
+        localStorage.setItem("username", username);
+      }
+
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || "Login failed");
+    }
+  },
+);
 
 const initialState = {
   username: "",
@@ -37,5 +46,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUsername, setPassword } = authSlice.actions;
+export const { setUsername, setPassword, logout } = authSlice.actions;
 export default authSlice.reducer;

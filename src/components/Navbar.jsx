@@ -1,11 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { replace, useNavigate } from "react-router";
+import { logout } from "../slices/authSlice";
 
-const Navbar = ({ author ,setSearch}) => {
+const Navbar = ({ author, setSearch }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
+    dispatch(logout());
+    navigate("/login", { replace: true });
   };
   return (
     <div className="flex w-full items-center justify-between border bg-amber-300 p-1">
@@ -16,8 +20,8 @@ const Navbar = ({ author ,setSearch}) => {
           name=""
           id=""
           placeholder="search"
-          className="hidden bg-gray-100 flex-1 rounded-md border px-2 sm:hidden lg:block lg:w-1/2"
-          onChange={(e)=>setSearch(e.target.value)}
+          className="hidden flex-1 rounded-md border bg-gray-100 px-2 sm:hidden lg:block lg:w-1/2"
+          onChange={(e) => setSearch(e.target.value)}
         />
         <div className="flex items-center gap-2">
           <div className="mr-4 rounded-full bg-white p-2 text-xs">{author}</div>
