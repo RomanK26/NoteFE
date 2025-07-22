@@ -1,35 +1,25 @@
-import React, { useState } from "react";
-import api from "../api";
+
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { setPassword, setUsername,login } from "../slices/authSlice";
+// import {login } from "../slices/authSlice"
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isloading, setIsLoading] = useState(false);
+  const username = useSelector((state) => state.auth.username);
+  const password = useSelector((state) => state.auth.password);
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    // console.log(username, password);
-    try {
-      const res = await api.post("/api/token/", { username, password });
-      if (res.status === 200) {
-        localStorage.clear();
-        localStorage.setItem("accessToken", res.data.access);
-        localStorage.setItem("refreshToken", res.data.refresh);
-        toast("User logged in successfully!", {
-          position: "bottom-right",
-          duration: 2500,
-          style: {
-            color: "#006400",
-          },
-        });
-        navigate("/");
-      }
-    } catch (error) {
-      toast("Error Occured");
+    const result = await dispatch(login({ username, password }));
+
+    if (login.fulfilled.match(result)) {
+      toast.success("Logged in!");
+      navigate("/");
+    } else {
+      toast.error(result.payload || "Login failed");
     }
   };
   return (
@@ -54,7 +44,7 @@ const Login = () => {
               placeholder="John Doe"
               required
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => dispatch(setUsername(e.target.value))}
             />
           </div>
           <div className="mb-5">
@@ -71,7 +61,7 @@ const Login = () => {
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => dispatch(setPassword(e.target.value))}
             />
             <div className="justify-self-end text-gray-400 underline hover:cursor-pointer">
               Forgot Password?
