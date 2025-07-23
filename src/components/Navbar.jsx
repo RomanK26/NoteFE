@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { replace, useNavigate } from "react-router";
+import { replace, useNavigate, useSearchParams } from "react-router";
 import { logout } from "../slices/authSlice";
 import { fetchNotes, setSearch } from "../slices/NoteSlices";
 
 const Navbar = ({ author }) => {
+  const [searchParams] = useSearchParams();
   const search = useSelector((state) => state.notes.search);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,12 +28,15 @@ const Navbar = ({ author }) => {
           id=""
           placeholder="search"
           className="hidden flex-1 rounded-md border border-gray-400 bg-gray-100 px-2 sm:hidden lg:block lg:w-1/2"
-          onChange={(e) => dispatch(setSearch(e.target.value))}
+          onChange={(e) => {
+            searchParams({ search: e.target.value });
+            dispatch(setSearch(e.target.value));
+          }}
         />
         <div className="flex items-center gap-2">
           <div className="mr-4 rounded-full bg-white p-2 text-xs">{author}</div>
           <button
-            className="rounded-lg border border-gray-300 hover:border-gray-900 bg-white p-1 hover:cursor-pointer"
+            className="rounded-lg border border-gray-300 bg-white p-1 hover:cursor-pointer hover:border-gray-900"
             onClick={handleLogout}
           >
             Logout
