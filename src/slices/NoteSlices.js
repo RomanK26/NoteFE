@@ -9,36 +9,61 @@ export const fetchNotes = createAsyncThunk(
       return res.data;
     }
     const res = await api.get("/api/notes/");
+
     return res.data;
+  },
+);
+
+export const addNote = createAsyncThunk(
+  "notes/addnote",
+  async ({ title, content }) => {
+    try {
+      const res = await api.post("/api/notes/", { title, content });
+      return res.data;
+    } catch (error) {
+      console.error("Add Note Error:", error.response?.data || error.message);
+      throw error;
+    }
+  },
+);
+
+export const updateNote = createAsyncThunk(
+  "notes/updatenote",
+  async ({ id, title, content }) => {
+    try {
+      const res = await api.put(`/api/notes/${id}/`, { title, content });
+
+      if (res.status == 200) console.log("updated");
+      return res.data;
+    } catch (error) {
+      console.error("Add Note Error:", error.response?.data || error.message);
+      throw error;
+    }
   },
 );
 
 export const removeNote = createAsyncThunk("notes/removeNote", async (id) => {
   const res = await api.delete(`/api/notes/${id}/`);
-  // console.log("Delete response:", res);
-  // console.log("deleted id", id);
-  return id;
+
+  if (res.status == 204) return id;
+  throw new Error("Failed to delete");
 });
 
 const initialState = {
   notes: [],
-  modal: false,
-  mode: "create",
+  mode: "",
   data: {},
   search: "",
   title: "",
   content: "",
-  status: "idle",
-  loading: false,
+  // status: "idle",
+  // loading: false,
 };
 
 export const noteSlice = createSlice({
   name: "note",
   initialState,
   reducers: {
-    setModal: (state, action) => {
-      state.modal = action.payload;
-    },
     setMode: (state, action) => {
       state.mode = action.payload;
     },
@@ -50,20 +75,6 @@ export const noteSlice = createSlice({
     },
     setLoading: (state, action) => {
       state.loading = action.payload;
-    },
-    setAuthor: (state, action) => {
-      state.author = action.payload;
-    },
-    addNote: (state, action) => {
-      const { mode, id } = action.payload;
-      state.mode = mode;
-      state.modal = true;
-      if (mode === "update" && id !== null) {
-        const foundNote = state.notes.find((note) => note.id === id);
-        state.data = foundNote || {};
-      } else {
-        state.data = {};
-      }
     },
 
     setTitle: (state, action) => {
@@ -87,17 +98,28 @@ export const noteSlice = createSlice({
       })
       .addCase(removeNote.fulfilled, (state, action) => {
         state.notes = state.notes.filter((note) => note.id !== action.payload);
+      })
+      .addCase(addNote.fulfilled, (state, action) => {
+        console.log("Note Created:", action.payload);
+        state.notes = [...state.notes, action.payload];
+      })
+      .addCase(updateNote.fulfilled, (state, action) => {
+        const updatedNote = action.payload;
+        const index = state.notes.findIndex(
+          (note) => note.id === updatedNote.id,
+        );
+        if (index !== -1) {
+          state.notes[index] = updatedNote;
+        }
       });
   },
 });
 
 export const {
-  setModal,
   setMode,
   setData,
   setSearch,
-  setAuthor,
-  addNote,
+  // addNote,
   setTitle,
   setContent,
 } = noteSlice.actions;

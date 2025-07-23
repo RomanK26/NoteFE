@@ -1,24 +1,33 @@
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setPassword, setUsername, login } from "../slices/authSlice";
-import { setAuthor } from "../slices/NoteSlices";
-// import {login } from "../slices/authSlice"
+import {
+  setPassword,
+  setUsername,
+  login,
+  setAuthenticated,
+} from "../slices/authSlice";
+import { useEffect } from "react";
 
 const Login = () => {
   const username = useSelector((state) => state.auth.username);
   const password = useSelector((state) => state.auth.password);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) navigate("/");
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await dispatch(login({ username, password }));
 
     if (login.fulfilled.match(result)) {
+      dispatch(setAuthenticated(true));
       toast.success("Logged in!");
-      dispatch(setAuthor(username));
-      navigate("/",{replace:true});
+
+      navigate("/", { replace: true });
     } else {
       toast.error(result.payload || "Login failed");
     }

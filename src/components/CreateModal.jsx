@@ -2,49 +2,58 @@ import React, { useEffect, useState } from "react";
 import api from "../api";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setContent, setTitle } from "../slices/NoteSlices";
+import {
+  addNote,
+  fetchNotes,
+  setContent,
+  setTitle,
+  updateNote,
+} from "../slices/NoteSlices";
+import { CircleX } from "lucide-react";
 
-const CreateModal = ({ onClose, mode, data }) => {
+const CreateModal = ({ onClose, data = {} }) => {
   const title = useSelector((state) => state.notes.title);
   const content = useSelector((state) => state.notes.content);
+  const mode = useSelector((state) => state.notes.mode);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (mode === "update") {
+      console.log(mode);
       dispatch(setTitle(data.title));
       dispatch(setContent(data.content));
     }
-  }, [data, mode]);
+  }, [data, mode, dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      let res;
+      if (mode === "update") {
+        await dispatch(updateNote({ id: data.id, title, content })).unwrap();
 
-      if (mode === "update" && data?.id) {
-        res = await api.put(`/api/notes/${data.id}/`, { title, content });
-        if (res.status === 200) {
-          toast("Note Updated!", {
-            position: "bottom-right",
-            duration: 2500,
-            style: {
-              color: "#ff9f1c",
-            },
-          });
-        }
-      } else {
-        res = await api.post("/api/notes/", { title, content });
-        if (res.status === 201) {
-          toast("Note created!", {
-            position: "bottom-right",
-            duration: 2500,
-            style: {
-              color: "#006400",
-            },
-          });
-        }
+        toast("✅Note Updated!", {
+          position: "bottom-left",
+          duration: 2500,
+          style: {
+            color: "#ff9f8c",
+          },
+        });
+      } else if (mode === "create") {
+        await dispatch(addNote({ title, content })).unwrap();
+
+        await dispatch(fetchNotes());
+        toast("Note created!", {
+          position: "bottom-left",
+          duration: 2500,
+          style: {
+            color: "#006400",
+          },
+        });
       }
+      dispatch(setTitle(""));
+      dispatch(setContent(""));
     } catch (error) {
       toast("Error Occured");
     }
@@ -53,7 +62,7 @@ const CreateModal = ({ onClose, mode, data }) => {
   };
   return (
     <>
-      <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-gray-300">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[2px]">
         <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
           <div className="mb-4 flex items-center justify-between border-b border-gray-200 pb-2">
             <h3 className="text-lg font-semibold text-gray-900">
@@ -61,9 +70,9 @@ const CreateModal = ({ onClose, mode, data }) => {
             </h3>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-900"
+              className="text-gray-400 hover:cursor-pointer hover:text-gray-900"
             >
-              ✖
+              <CircleX></CircleX>
             </button>
           </div>
 

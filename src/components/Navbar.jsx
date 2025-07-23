@@ -1,11 +1,17 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { replace, useNavigate } from "react-router";
 import { logout } from "../slices/authSlice";
+import { fetchNotes, setSearch } from "../slices/NoteSlices";
 
-const Navbar = ({ author, setSearch }) => {
+const Navbar = ({ author }) => {
+  const search = useSelector((state) => state.notes.search);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchNotes(search));
+  }, [search]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -20,13 +26,13 @@ const Navbar = ({ author, setSearch }) => {
           name=""
           id=""
           placeholder="search"
-          className="hidden flex-1 rounded-md border bg-gray-100 px-2 sm:hidden lg:block lg:w-1/2"
-          onChange={(e) => setSearch(e.target.value)}
+          className="hidden flex-1 rounded-md border border-gray-400 bg-gray-100 px-2 sm:hidden lg:block lg:w-1/2"
+          onChange={(e) => dispatch(setSearch(e.target.value))}
         />
         <div className="flex items-center gap-2">
           <div className="mr-4 rounded-full bg-white p-2 text-xs">{author}</div>
           <button
-            className="rounded-lg border bg-white p-1 hover:cursor-pointer"
+            className="rounded-lg border border-gray-300 hover:border-gray-900 bg-white p-1 hover:cursor-pointer"
             onClick={handleLogout}
           >
             Logout
