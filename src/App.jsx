@@ -7,6 +7,7 @@ import NotFound from "./pages/Notfound";
 import { useDispatch } from "react-redux";
 import { setAuthenticated } from "./slices/authSlice";
 import { useEffect } from "react";
+
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {

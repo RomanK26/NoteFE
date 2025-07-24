@@ -2,12 +2,33 @@ import React, { useState } from "react";
 import api from "../api";
 import { Link, useNavigate } from "react-router";
 import toast from "react-hot-toast";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isloading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleSuccess = async (credentialResponse) => {
+    const idToken = credentialResponse.credential;
+
+    try {
+      
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: idToken }),
+      });
+  
+      console.log("Backend login success:", res);
+      localStorage.setItem("authToken", res.data.token);
+    } catch (error) {
+      console.log('error',error)
+      
+    }
+
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,82 +59,92 @@ const Register = () => {
         });
       }
     }
-  };
-  return (
-    <div className="flex h-svh items-center justify-center">
-      <div className="w-full">
-        <form
-          className="mx-auto w-full max-w-sm rounded-2xl border p-5"
-          onSubmit={handleSubmit}
-        >
-          <h2 className="text-center text-3xl font-bold">Register</h2>
-          <div className="mb-5">
-            <label
-              htmlFor="username"
-              className="mb-2 block text-sm font-medium text-gray-900"
-            >
-              Username
-            </label>
-            <input
-              type="test"
-              id="username"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              placeholder="John Doe"
-              required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div className="mb-5">
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-gray-900"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              placeholder="password"
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="mb-5 flex items-start">
-            <div className="flex h-5 items-center">
+  }
+
+    return (
+      <div className="flex h-svh items-center justify-center">
+        <div className="w-full">
+          <form
+            className="mx-auto w-full max-w-sm rounded-2xl border p-5"
+            onSubmit={handleSubmit}
+          >
+            <h2 className="text-center text-3xl font-bold">Register</h2>
+            <div className="my-3 flex w-full flex-col items-center justify-between">
+              <GoogleLogin
+                onSuccess={handleSuccess}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+                className="mt-4 mb-8"
+              />
+              <p>or</p>
+            </div>
+            <div className="mb-5">
+              <label
+                htmlFor="username"
+                className="mb-2 block text-sm font-medium text-gray-900"
+              >
+                Username
+              </label>
               <input
-                id="remember"
-                type="checkbox"
-                value=""
-                className="h-4 w-4 rounded-sm border border-gray-300 bg-gray-200 focus:ring-1 focus:ring-blue-300 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
+                type="test"
+                id="username"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="John Doe"
+                required
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <label
-              htmlFor="remember"
-              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500"
+            <div className="mb-5">
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium text-gray-900"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="password"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="mb-5 flex items-start">
+              <div className="flex h-5 items-center">
+                <input
+                  id="remember"
+                  type="checkbox"
+                  value=""
+                  className="h-4 w-4 rounded-sm border border-gray-300 bg-gray-200 focus:ring-1 focus:ring-blue-300 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
+                />
+              </div>
+              <label
+                htmlFor="remember"
+                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500"
+              >
+                Remember me
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-              Remember me
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              Submit
+            </button>
+          </form>
+          <Link
+            className="block self-center justify-self-center text-gray-400"
+            to={"/login"}
           >
-            Submit
-          </button>
-        </form>
-        <Link
-          className="block self-center justify-self-center text-gray-400"
-          to={"/login"}
-        >
-          Already have an account?{" "}
-          <span className="text-orange-300 underline">Login</span>
-        </Link>
+            Already have an account?{" "}
+            <span className="text-orange-300 underline">Login</span>
+          </Link>
+        </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  };
 export default Register;

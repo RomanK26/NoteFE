@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { replace, useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 import { logout } from "../slices/authSlice";
 import { fetchNotes, setSearch } from "../slices/NoteSlices";
 
 const Navbar = ({ author }) => {
-  const [searchParams] = useSearchParams();
   const search = useSelector((state) => state.notes.search);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,10 +27,7 @@ const Navbar = ({ author }) => {
           id=""
           placeholder="search"
           className="hidden flex-1 rounded-md border border-gray-400 bg-gray-100 px-2 sm:hidden lg:block lg:w-1/2"
-          onChange={(e) => {
-            searchParams({ search: e.target.value });
-            dispatch(setSearch(e.target.value));
-          }}
+          onChange={(e) => dispatch(setSearch(e.target.value))}
         />
         <div className="flex items-center gap-2">
           <div className="mr-4 rounded-full bg-white p-2 text-xs">{author}</div>

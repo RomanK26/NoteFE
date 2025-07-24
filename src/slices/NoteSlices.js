@@ -56,8 +56,6 @@ const initialState = {
   search: "",
   title: "",
   content: "",
-  // status: "idle",
-  // loading: false,
 };
 
 export const noteSlice = createSlice({
