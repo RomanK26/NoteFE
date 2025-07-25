@@ -56,6 +56,8 @@ const initialState = {
   search: "",
   title: "",
   content: "",
+  status: "Pending",
+  open: false,
 };
 
 export const noteSlice = createSlice({
@@ -81,19 +83,20 @@ export const noteSlice = createSlice({
     setContent: (state, action) => {
       state.content = action.payload;
     },
+    setStatus: (state, action) => {
+      state.status = action.payload;
+    },
+    setOpen: (state, action) => {
+      state.open = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchNotes.pending, (state) => {
-        state.status = "loading";
-      })
+      .addCase(fetchNotes.pending, (state) => {})
       .addCase(fetchNotes.fulfilled, (state, action) => {
-        state.status = "succeeded";
         state.notes = action.payload;
       })
-      .addCase(fetchNotes.rejected, (state) => {
-        state.status = "failed";
-      })
+      .addCase(fetchNotes.rejected, (state) => {})
       .addCase(removeNote.fulfilled, (state, action) => {
         state.notes = state.notes.filter((note) => note.id !== action.payload);
       })
@@ -117,9 +120,10 @@ export const {
   setMode,
   setData,
   setSearch,
-  // addNote,
+  setStatus,
   setTitle,
   setContent,
+  setOpen,
 } = noteSlice.actions;
 
 export default noteSlice.reducer;

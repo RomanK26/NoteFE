@@ -13,6 +13,7 @@ import {
   setTitle,
 } from "../slices/NoteSlices";
 import { useDispatch, useSelector } from "react-redux";
+import Dropdown from "../components/Dropdown";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const Home = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full min-w-[230px] flex-col">
+    <div className="flex max-h-screen w-full min-w-[230px] flex-col">
       <Navbar author={author} />
       {notes.length < 1 && (
         <div className="flex w-full flex-1 items-center justify-center">
@@ -61,9 +62,12 @@ const Home = () => {
               key={note.id}
             >
               <div className="rounded-sm bg-gray-200 p-2">
-                <h3 className="text-lg font-bold text-gray-800 uppercase">
-                  {note.title}
-                </h3>
+                <div className="flex justify-between">
+                  <h3 className="text-lg font-bold text-gray-800 uppercase">
+                    {note.title}
+                  </h3>
+                  <Dropdown />
+                </div>
                 <p className="mt-1 text-xs font-medium text-gray-400">
                   {new Date(note.created_at).toLocaleString()}
                 </p>

@@ -23,6 +23,7 @@ const initialState = {
   username: "",
   password: "",
   authenticated: null,
+  pass:false
 };
 
 const authSlice = createSlice({
@@ -41,6 +42,10 @@ const authSlice = createSlice({
     setAuthenticated: (state, action) => {
       state.authenticated = action.payload;
     },
+    showPassword:(state,action)=>{
+      state.pass = action.payload
+    }
+    
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
@@ -50,5 +55,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUsername, setPassword, logout ,setAuthenticated} = authSlice.actions;
+export const { setUsername, setPassword, logout ,setAuthenticated,showPassword} = authSlice.actions;
 export default authSlice.reducer;
