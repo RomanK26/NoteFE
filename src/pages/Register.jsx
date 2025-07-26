@@ -28,7 +28,6 @@ const Register = () => {
         },
       );
 
-      console.log("Backend login success:", res);
       localStorage.setItem("authToken", res.data.token);
     } catch (error) {
       console.log("error", error);
@@ -77,7 +76,7 @@ const Register = () => {
           className="mx-auto w-full max-w-sm rounded-2xl border p-5"
           onSubmit={handleSubmit}
         >
-          <div className="my-3 flex w-full flex-col items-center justify-between">
+          {/* <div className="my-3 flex w-full flex-col items-center justify-between">
             <GoogleLogin
               onSuccess={handleSuccess}
               onError={() => {
@@ -86,7 +85,7 @@ const Register = () => {
               className="mt-4 mb-8"
             />
             <p className="text-gray-400">or</p>
-          </div>
+          </div> */}
           <div className="mb-5">
             <label
               htmlFor="username"
@@ -170,7 +169,7 @@ const Register = () => {
           <div className="flex items-center justify-center">
             <button
               type="submit"
-              className="rounded-lg focus:ring-white-300 w-full self-center bg-amber-500 px-5 py-2.5 text-center text-sm font-normal text-black drop-shadow-amber-600 hover:cursor-pointer focus:ring-1 focus:outline-none sm:w-auto"
+              className="focus:ring-white-300 w-full self-center rounded-lg bg-amber-500 px-5 py-2.5 text-center text-sm font-normal text-black drop-shadow-amber-600 hover:cursor-pointer focus:ring-1 focus:outline-none sm:w-auto"
             >
               Submit
             </button>

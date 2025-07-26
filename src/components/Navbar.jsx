@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { logout } from "../slices/authSlice";
-import { fetchNotes, setSearch } from "../slices/NoteSlices";
+import { fetchNotes, setFilter, setSearch } from "../slices/NoteSlices";
 import SortBy from "./SortBy";
 
 const Navbar = ({ author }) => {
@@ -11,7 +11,7 @@ const Navbar = ({ author }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchNotes(search));
+    dispatch(fetchNotes({ search: search }));
   }, [search]);
 
   const handleLogout = () => {
@@ -20,7 +20,13 @@ const Navbar = ({ author }) => {
   };
   return (
     <div className="flex w-full items-center justify-between border bg-amber-300 p-1">
-      <h1 className="text-sm leading-2 font-medium -tracking-wider">
+      <h1
+        className="text-sm leading-2 font-medium -tracking-wider hover:cursor-pointer"
+        onClick={() => {
+          dispatch(fetchNotes({}));
+          dispatch(setFilter(""));
+        }}
+      >
         MemoRizz
       </h1>
       <div className="flex-end flex justify-between gap-3 sm:m-2 lg:w-1/4">

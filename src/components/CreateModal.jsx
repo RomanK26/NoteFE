@@ -20,7 +20,6 @@ const CreateModal = ({ onClose, data = {} }) => {
 
   useEffect(() => {
     if (mode === "update") {
-      console.log(mode);
       dispatch(setTitle(data.title));
       dispatch(setContent(data.content));
     }
@@ -44,7 +43,7 @@ const CreateModal = ({ onClose, data = {} }) => {
         await dispatch(addNote({ title, content })).unwrap();
 
         await dispatch(fetchNotes());
-        toast("Note created!", {
+        toast("✓ Note created!", {
           position: "bottom-left",
           duration: 2500,
           style: {

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchNotes } from "../slices/NoteSlices";
+import { fetchNotes, setFilter, setSearch } from "../slices/NoteSlices";
 
 const SortBy = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch();
+
   const sortBy = ["pending", "in progress", "completed"];
 
-  const handleSort = async (searchItem) => {
-    await dispatch(fetchNotes(searchItem));
+  const handleSort = async (item) => {
+    await dispatch(fetchNotes({ filter: item }));
+    setIsOpen(false);
   };
   return (
     <div className="">
@@ -27,10 +29,8 @@ const SortBy = () => {
               <li
                 key={item}
                 onClick={async () => {
-                  console.log("item", item);
-
-                  handleSort(item);
-                  setIsOpen(false);
+                  await dispatch(setFilter(item));
+                  await handleSort(item);
                 }}
                 className={`h-full cursor-pointer overflow-hidden rounded px-2 py-1.5 text-center font-thin capitalize hover:bg-gray-100`}
               >

@@ -3,14 +3,12 @@ import api from "../api";
 
 export const fetchNotes = createAsyncThunk(
   "notes/fetchNotes",
-  async (search = "") => {
-    if (search) {
-      console.log('search',search)
-      const res = await api.get("/api/notes/", { params: { search } });
-      return res.data;
-    }
-    const res = await api.get("/api/notes/");
+  async ({ search = "", filter = "" }) => {
+    let params = {};
+    if (search) params.search = search;
+    if (filter) params.filter = filter;
 
+    const res = await api.get("/api/notes/", { params });
     return res.data;
   },
 );
@@ -37,11 +35,8 @@ export const updateNote = createAsyncThunk(
       if (content !== undefined) payload.content = content;
       if (status !== undefined) payload.current_status = status.toLowerCase();
 
-      console.log("payload", payload);
       const res = await api.patch(`/api/notes/${id}/`, payload);
-      console.log(res);
 
-      if (res.status == 200) console.log("updated");
       return res.data;
     } catch (error) {
       console.error("Add Note Error:", error.response?.data || error.message);
@@ -65,6 +60,7 @@ const initialState = {
   title: "",
   content: "",
   status: "pending",
+  filter: "",
 };
 
 export const noteSlice = createSlice({
@@ -96,6 +92,9 @@ export const noteSlice = createSlice({
     setOpen: (state, action) => {
       state.open = action.payload;
     },
+    setFilter: (state, action) => {
+      state.filter = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -108,7 +107,6 @@ export const noteSlice = createSlice({
         state.notes = state.notes.filter((note) => note.id !== action.payload);
       })
       .addCase(addNote.fulfilled, (state, action) => {
-        console.log("Note Created:", action.payload);
         state.notes = [...state.notes, action.payload];
       })
       .addCase(updateNote.fulfilled, (state, action) => {
@@ -131,6 +129,7 @@ export const {
   setTitle,
   setContent,
   setOpen,
+  setFilter,
 } = noteSlice.actions;
 
 export default noteSlice.reducer;

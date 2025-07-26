@@ -32,7 +32,7 @@ const Dropdown = ({ id, status }) => {
               <li
                 key={item}
                 onClick={async () => {
-                  console.log("item", item);
+        
                   await dispatch(setStatus(item));
                   handleUpdate(item);
                   setIsOpen(false);
