@@ -5,6 +5,7 @@ export const fetchNotes = createAsyncThunk(
   "notes/fetchNotes",
   async (search = "") => {
     if (search) {
+      console.log('search',search)
       const res = await api.get("/api/notes/", { params: { search } });
       return res.data;
     }
@@ -56,13 +57,6 @@ export const removeNote = createAsyncThunk("notes/removeNote", async (id) => {
   throw new Error("Failed to delete");
 });
 
-// export const updateStatus = createAsyncThunk("notes/updateStatus", async (id) => {
-//   const res = await api.put(`/api/notes/${id}/`);
-
-//   if (res.status == 204) return id;
-//   throw new Error("Failed to delete");
-// });
-
 const initialState = {
   notes: [],
   mode: "",
@@ -71,7 +65,6 @@ const initialState = {
   title: "",
   content: "",
   status: "pending",
-  open: false,
 };
 
 export const noteSlice = createSlice({
