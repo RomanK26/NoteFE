@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { logout } from "../slices/authSlice";
 import { fetchNotes, setSearch } from "../slices/NoteSlices";
+import SortBy from "./SortBy";
 
 const Navbar = ({ author }) => {
   const search = useSelector((state) => state.notes.search);
@@ -19,8 +20,12 @@ const Navbar = ({ author }) => {
   };
   return (
     <div className="flex w-full items-center justify-between border bg-amber-300 p-1">
-      <div>Note App</div>
+      <h1 className="text-sm leading-2 font-medium -tracking-wider">
+        MemoRizz
+      </h1>
       <div className="flex-end flex justify-between gap-3 sm:m-2 lg:w-1/4">
+        <SortBy />
+
         <input
           type="search"
           name=""

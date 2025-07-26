@@ -33,7 +33,7 @@ const CreateModal = ({ onClose, data = {} }) => {
       if (mode === "update") {
         await dispatch(updateNote({ id: data.id, title, content })).unwrap();
 
-        toast("✅Note Updated!", {
+        toast("✓ Note Updated!", {
           position: "bottom-left",
           duration: 2500,
           style: {

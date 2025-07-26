@@ -42,7 +42,7 @@ api.interceptors.response.use(
         localStorage.setItem("accessToken", access);
 
         originalRequest.headers.Authorization = `Bearer ${access}`;
-        return axios(originalRequest);
+        return api(originalRequest);
       } catch (error) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");

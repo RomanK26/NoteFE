@@ -5,6 +5,7 @@ export const fetchNotes = createAsyncThunk(
   "notes/fetchNotes",
   async (search = "") => {
     if (search) {
+      console.log('search',search)
       const res = await api.get("/api/notes/", { params: { search } });
       return res.data;
     }
@@ -29,9 +30,16 @@ export const addNote = createAsyncThunk(
 
 export const updateNote = createAsyncThunk(
   "notes/updatenote",
-  async ({ id, title, content }) => {
+  async ({ id, title, content, status }) => {
     try {
-      const res = await api.put(`/api/notes/${id}/`, { title, content });
+      const payload = {};
+      if (title !== undefined) payload.title = title;
+      if (content !== undefined) payload.content = content;
+      if (status !== undefined) payload.current_status = status.toLowerCase();
+
+      console.log("payload", payload);
+      const res = await api.patch(`/api/notes/${id}/`, payload);
+      console.log(res);
 
       if (res.status == 200) console.log("updated");
       return res.data;
@@ -56,8 +64,7 @@ const initialState = {
   search: "",
   title: "",
   content: "",
-  status: "Pending",
-  open: false,
+  status: "pending",
 };
 
 export const noteSlice = createSlice({
