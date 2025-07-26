@@ -9,7 +9,7 @@ import {
   showPassword,
 } from "../slices/authSlice";
 import { useEffect } from "react";
-import { Eye, EyeOff, Lock, StickyNote, User } from "lucide-react";
+import { Circle, Eye, EyeOff, Lock, StickyNote, User } from "lucide-react";
 
 const Login = () => {
   const username = useSelector((state) => state.auth.username);
@@ -38,7 +38,7 @@ const Login = () => {
   };
   return (
     <div className="relative flex h-svh items-center justify-between overflow-hidden">
-      <div className="absolute -top-10 -left-5 h-[208px] w-[200px] rounded-full bg-amber-500"></div>
+      <div className="absolute -top-10 -left-5 h-28 w-28 lg:h-[208px] lg:w-[200px] rounded-full bg-amber-500"></div>
       <div className="absolute -top-10 -right-10 h-[120px] w-[100px] -rotate-45 rounded-full border border-amber-500 lg:h-57 lg:w-40"></div>
       <div className="mt-3 mb-4 hidden w-full flex-col items-center justify-center md:flex">
         <div>

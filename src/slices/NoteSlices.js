@@ -29,9 +29,16 @@ export const addNote = createAsyncThunk(
 
 export const updateNote = createAsyncThunk(
   "notes/updatenote",
-  async ({ id, title, content }) => {
+  async ({ id, title, content, status }) => {
     try {
-      const res = await api.put(`/api/notes/${id}/`, { title, content });
+      const payload = {};
+      if (title !== undefined) payload.title = title;
+      if (content !== undefined) payload.content = content;
+      if (status !== undefined) payload.current_status = status.toLowerCase();
+
+      console.log("payload", payload);
+      const res = await api.patch(`/api/notes/${id}/`, payload);
+      console.log(res);
 
       if (res.status == 200) console.log("updated");
       return res.data;
@@ -49,6 +56,13 @@ export const removeNote = createAsyncThunk("notes/removeNote", async (id) => {
   throw new Error("Failed to delete");
 });
 
+// export const updateStatus = createAsyncThunk("notes/updateStatus", async (id) => {
+//   const res = await api.put(`/api/notes/${id}/`);
+
+//   if (res.status == 204) return id;
+//   throw new Error("Failed to delete");
+// });
+
 const initialState = {
   notes: [],
   mode: "",
@@ -56,7 +70,7 @@ const initialState = {
   search: "",
   title: "",
   content: "",
-  status: "Pending",
+  status: "pending",
   open: false,
 };
 

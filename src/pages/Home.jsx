@@ -9,6 +9,7 @@ import {
   setContent,
   setData,
   setMode,
+  setOpen,
   setSearch,
   setTitle,
 } from "../slices/NoteSlices";
@@ -24,6 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchNotes());
+    console.log("notes", notes);
   }, []);
 
   const handleCreate = async (mode, id = null) => {
@@ -44,39 +46,39 @@ const Home = () => {
   };
 
   return (
-    <div className="flex max-h-screen w-full min-w-[230px] flex-col">
+    <div className="flex min-h-screen w-full min-w-[230px] flex-col">
       <Navbar author={author} />
       {notes.length < 1 && (
         <div className="flex w-full flex-1 items-center justify-center">
-          <h1 className="text-2xl text-gray-400 lg:text-5xl">
+          <h1 className="text-2xl text-gray-400 lg:text-5xl tracking-wider leading-5 font-light">
             Create your first note!
           </h1>
         </div>
       )}
 
       {notes ? (
-        <div className="grid grid-cols-1 gap-4 p-8 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 p-8 lg:grid-cols-4 ">
           {notes.map((note) => (
             <div
               className="flex flex-col justify-between border border-gray-300 bg-white p-4 shadow-2xs md:p-5 lg:min-h-[20rem]"
               key={note.id}
             >
-              <div className="rounded-sm bg-gray-200 p-2">
+              <div className="space-y-2 rounded-sm bg-gray-100 p-2">
                 <div className="flex justify-between">
                   <h3 className="text-lg font-bold text-gray-800 uppercase">
                     {note.title}
                   </h3>
-                  <Dropdown />
+                  <Dropdown status={note.current_status} id={note.id} />
                 </div>
-                <p className="mt-1 text-xs font-medium text-gray-400">
+                <p className="mt-1 text-end text-xs/2 leading-0 font-thin text-gray-400">
                   {new Date(note.created_at).toLocaleString()}
                 </p>
               </div>
-              <p className="mt-2 flex-1 text-gray-800">{note.content}</p>
+              <p className="mt-2 flex-1 text-gray-800 border-t pt-1 rounded-md border-amber-400">{note.content}</p>
               <div className="flex justify-between">
                 <button
                   title="Edit note"
-                  className="rounded-md border border-transparent bg-amber-300 px-2.5 py-1 text-center text-sm text-black shadow-sm transition-all hover:cursor-pointer hover:border-amber-300 hover:bg-gray-50 hover:text-black hover:shadow"
+                  className="rounded-md border border-transparent bg-amber-300 p-1 text-center text-sm text-black shadow-sm transition-all hover:cursor-pointer hover:border-amber-300 hover:bg-gray-50 hover:text-black hover:shadow"
                   type="button"
                   onClick={() => {
                     dispatch(
@@ -84,6 +86,7 @@ const Home = () => {
                         title: note.title,
                         content: note.content,
                         id: note.id,
+                        status: note.status,
                       }),
                     );
                     handleCreate("update", note.id);
@@ -92,7 +95,7 @@ const Home = () => {
                   <SquarePen />
                 </button>
                 <button
-                  className="rounded-md border border-transparent bg-red-400 p-1 text-center text-sm text-white shadow-sm transition-all hover:cursor-pointer"
+                  className="rounded-md border border-red-500 p-0.5 text-center text-sm text-red-500 shadow-sm transition-all hover:cursor-pointer"
                   type="button"
                   onClick={() => handleDelete(note.id)}
                   title="Delete Note"

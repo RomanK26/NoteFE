@@ -1,16 +1,26 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpen, setStatus } from "../slices/NoteSlices";
+import { setOpen, setStatus, updateNote } from "../slices/NoteSlices";
 
-const Dropdown = () => {
-  const status = useSelector((state) => state.notes.status);
-  const open = useSelector((state) => state.notes.status);
+const Dropdown = ({ id, status }) => {
+  const open = useSelector((state) => state.notes.open);
   const dispatch = useDispatch();
-  const statuses = ["Pending", "In Progress", "Completed", "Archived"];
+  const statuses = ["pending", "in progress", "completed"];
+  const statusStyles = {
+    pending: "text-yellow-600 bg-yellow-100",
+    "in progress": "text-blue-600 bg-blue-200",
+    completed: "text-green-600 bg-green-100",
+  };
+
+  console.log("status", status);
+
+  const handleUpdate = async (updatedStatus) => {
+    await dispatch(updateNote({ id: id, status: updatedStatus })).unwrap();
+  };
   return (
     <div className="">
       <button
-        className="inline-flex items-center rounded-lg bg-amber-100 px-5 py-2.5 text-center text-sm font-medium text-yellow-400 hover:bg-white hover:text-yellow-500 focus:ring-1 focus:outline-none"
+        className={`inline-flex items-center rounded-lg px-2 py-1.5 text-end text-xs/2 font-medium capitalize hover:bg-white hover:text-yellow-500 focus:ring-1 focus:outline-none ${statusStyles[status]}`}
         type="button"
         onClick={() => dispatch(setOpen(!open))}
       >
@@ -18,16 +28,18 @@ const Dropdown = () => {
       </button>
 
       {open && (
-        <div className="absolute z-10 mt-2 w-28 divide-y divide-gray-100 rounded-lg bg-white shadow-sm">
-          <ul className="py-2 text-xs text-gray-700">
+        <div className="absolute z-10 w-28 divide-y  shadow-sm">
+          <ul className="rounded-md text-xs/3 text-gray-700">
             {statuses.map((item) => (
               <li
                 key={item}
-                onClick={() => {
-                  dispatch(setStatus(item));
+                onClick={async () => {
+                  console.log("item", item);
+                  await dispatch(setStatus(item));
+                  handleUpdate(item);
                   dispatch(setOpen(false));
                 }}
-                className="cursor-pointer px-2 py-2 hover:bg-gray-100"
+                className={`h-full cursor-pointer overflow-hidden rounded px-2 py-1.5 text-center capitalize hover:bg-gray-100 ${statusStyles[item]}`}
               >
                 {item}
               </li>
