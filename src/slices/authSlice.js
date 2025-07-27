@@ -6,9 +6,8 @@ export const login = createAsyncThunk(
   async ({ username, password }, thunkAPI) => {
     try {
       const res = await api.post("/api/token/", { username, password });
-      console.log(res.status);
+
       if (res.status == 200) {
-        console.log("inside");
         localStorage.setItem("username", username);
       }
 
@@ -23,7 +22,7 @@ const initialState = {
   username: "",
   password: "",
   authenticated: null,
-  pass:false
+  pass: false,
 };
 
 const authSlice = createSlice({
@@ -42,10 +41,9 @@ const authSlice = createSlice({
     setAuthenticated: (state, action) => {
       state.authenticated = action.payload;
     },
-    showPassword:(state,action)=>{
-      state.pass = action.payload
-    }
-    
+    showPassword: (state, action) => {
+      state.pass = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
@@ -55,5 +53,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUsername, setPassword, logout ,setAuthenticated,showPassword} = authSlice.actions;
+export const {
+  setUsername,
+  setPassword,
+  logout,
+  setAuthenticated,
+  showPassword,
+} = authSlice.actions;
 export default authSlice.reducer;
